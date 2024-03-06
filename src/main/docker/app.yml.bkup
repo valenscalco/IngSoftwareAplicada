@@ -1,0 +1,57 @@
+# This configuration is intended for development purpose, it's **your** responsibility to harden it for production
+version: '3.8'
+services:
+  library-app:
+    image: library
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,api-docs
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://library-postgresql:5432/library
+      - SPRING_LIQUIBASE_URL=jdbc:postgresql://library-postgresql:5432/library
+      - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
+    # If you want to expose these ports outside your dev PC,
+    # remove the "127.0.0.1:" prefix
+    ports:
+      - 127.0.0.1:8080:8080
+  library-postgresql:
+    image: postgres:14.5
+    # volumes:
+    #   - ~/volumes/jhipster/library/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=library
+      - POSTGRES_PASSWORD=
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    # If you want to expose these ports outside your dev PC,
+    # remove the "127.0.0.1:" prefix
+    ports:
+      - 127.0.0.1:5432:5432
+
+  elk:
+    image: sebp/elk
+    restart: unless-stopped
+    ports:
+      - '5601:5601'
+      - '9200:9200'
+      - '5044:5044'
+    networks:
+      - elkf-netwok
+    environment:
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+
+  filebeat:
+    depends_on:
+      - elk
+    image: docker.elastic.co/beats/filebeat:${STACK_VERSION}
+    user: root
+    networks:
+      - elkf-netwok
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers/:/var/lib/docker/containers/:ro
+    command: ['--strict.perms=false']
+
+networks:
+  elkf-netwok:
+    driver: 'bridge'
