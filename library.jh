@@ -3,7 +3,7 @@ application {
     baseName library,
     applicationType monolith,
     authenticationType jwt
-    packageName com.sgaraba.library,
+    packageName com.valenscalco.library,
     prodDatabaseType postgresql,
     cacheProvider hazelcast,
     buildTool maven,

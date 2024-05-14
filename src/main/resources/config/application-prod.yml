@@ -17,7 +17,7 @@ logging:
   level:
     ROOT: INFO
     tech.jhipster: INFO
-    com.sgaraba.library: INFO
+    com.valenscalco.library: INFO
 
 management:
   metrics:
@@ -87,7 +87,7 @@ server:
 
 jhipster:
   cors:
-    allowed-origins: 'http://localhost:3000,http://localhost:8100,https://localhost:8100,http://localhost:9000,https://localhost:9000,http://localhost:4200,https://localhost:4200,https://localhost:8001'
+    allowed-origins: 'http://localhost:3000,http://localhost:8100,https://localhost:8100,http://localhost:9000,https://localhost:9000,http://localhost:4200,https://localhost:4200,http://localhost:4173,https://localhost:4173,https://localhost:8001'
     allowed-methods: '*'
     allowed-headers: '*'
     exposed-headers: '*'
